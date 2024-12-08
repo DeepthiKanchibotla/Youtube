@@ -10,6 +10,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
@@ -23,14 +24,67 @@ import demo.utils.ExcelDataProvider;
 // import io.github.bonigarcia.wdm.WebDriverManager;
 import demo.wrappers.Wrappers;
 
-public class TestCases extends ExcelDataProvider{ // Lets us read the data
+public class TestCases extends ExcelDataProvider { // Lets us read the data
         ChromeDriver driver;
+        Wrappers wrappers;
 
         /*
          * TODO: Write your tests here with testng @Test annotation.
          * Follow `testCase01` `testCase02`... format or what is provided in
          * instructions
          */
+        @Test
+        public void testCase01() throws InterruptedException {
+
+                System.out.println("Start of test case 01");
+                driver.get("https://www.youtube.com/");
+                wrappers.verifyCurrentURL("https://www.youtube.com/");
+                wrappers.verifyAboutmssg();
+                System.out.println("End of test case 01");
+        }
+
+         @Test
+        public void testCase02() throws InterruptedException {
+                System.out.println("Start of test case 02");
+                driver.get("https://www.youtube.com/");
+                wrappers.navigateToTab("Movies");
+                wrappers.verifyNextButton(driver, "Top selling", 3);
+                wrappers.verifyMovieMaturity();
+                wrappers.movieCategory();
+                System.out.println("End of test case 02");
+        }
+
+        @Test
+        public void testCase03() throws InterruptedException {
+                System.out.println("Start of test case 03");
+                driver.get("https://www.youtube.com/");
+                wrappers.navigateToTab("Music");
+                wrappers.verifyNextButton(driver, "Biggest Hits", 2);
+                wrappers.nameOfLastPlayList("Biggest Hits");
+                wrappers.noOfTracks("Biggest Hits", "Bollywood Dance");
+                System.out.println("End of test case 03");
+        }
+
+        @Test
+        public void testCase04() throws InterruptedException {
+                System.out.println("Start of test case 04");
+                driver.get("https://www.youtube.com/");
+                wrappers.navigateToTab("News");
+                wrappers.titleofLatestpost();
+                wrappers.sumOfLikes();
+                System.out.println("End of test case 04");
+        }
+
+        @Test(dataProvider = "excelData",dataProviderClass = ExcelDataProvider.class)
+        public void testCase05(String text) throws InterruptedException {
+                System.out.println("Start of test case 05");
+                driver.get("https://www.youtube.com/");
+                wrappers.searchItem(text);
+                wrappers.totalCountofViews();
+                System.out.println("End of test case 05");
+        }
+
+
 
         /*
          * Do not change the provided methods unless necessary, they will help in
@@ -54,6 +108,7 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "build/chromedriver.log");
 
                 driver = new ChromeDriver(options);
+                wrappers = new Wrappers(driver);
 
                 driver.manage().window().maximize();
         }
